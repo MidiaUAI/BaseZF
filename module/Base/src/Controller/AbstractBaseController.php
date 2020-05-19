@@ -13,6 +13,9 @@ namespace Base\Controller;
 use Base\RequestTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Helper\HeadLink;
+use Laminas\View\Helper\HeadScript;
+use Laminas\View\Helper\HeadTitle;
 use Laminas\View\Model\ViewModel;
 
 abstract class AbstractBaseController extends AbstractActionController
@@ -55,15 +58,22 @@ abstract class AbstractBaseController extends AbstractActionController
     }
 
     /**
-     * add a new file javascript on layout
+     * Add a new javascript file on layout.
      *
      * @param string $fileAdress
-     * @return void
+     *      The file address.
+     *
+     * @return \Laminas\View\Helper\HeadScript
+     *      The head script helper.
+     *
      * @example $this->addJsFile('adress-of-file.js');
      */
-    protected function addJsFile($fileAdress)
+    protected function addJsFile($fileAdress): HeadScript
     {
-        $this->getViewHelper('HeadScript')->appendFile($fileAdress);
+        $headScript = $this->getViewHelper('HeadScript');
+        $headScript->appendFile($fileAdress);
+
+        return $headScript;
     }
 
     /**
@@ -77,7 +87,7 @@ abstract class AbstractBaseController extends AbstractActionController
      *
      * @example $this->addCssFile('adress-of-file.css');
      */
-    protected function addCssFile($fileAddress)
+    protected function addCssFile($fileAddress): HeadLink
     {
         /** @var \Laminas\View\Helper\HeadLink */
         $headLink = $this->getViewHelper('HeadLink');
@@ -86,13 +96,30 @@ abstract class AbstractBaseController extends AbstractActionController
         return $headLink;
     }
 
-    protected function setHeadTitle($titlePage)
+    /**
+     * Set title page
+     *
+     * @param string $titlePage
+     *      The page title
+     *
+     * @return \Laminas\View\Helper\HeadTitle
+     */
+    protected function setHeadTitle($titlePage): HeadTitle
     {
-        $this->getViewHelper('HeadTitle')->set($titlePage);
+        /** @var \Laminas\View\Helper\HeadTitle */
+        $headTitle = $this->getViewHelper('HeadTitle');
+        $headTitle->set($titlePage);
+
+        return $headTitle;
     }
 
     public function indexAction()
     {
-        return [];
+        dd(
+            $this->getServiceManager()->get('ViewHelperManager'),
+            $this->setHeadTitle('isso')
+        );
+        $this->setHeadTitle('isso');
+        return new ViewModel();
     }
 }
