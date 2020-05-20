@@ -16,6 +16,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Helper\HeadLink;
 use Laminas\View\Helper\HeadScript;
 use Laminas\View\Helper\HeadTitle;
+use Laminas\View\Helper\HelperInterface;
 use Laminas\View\Model\ViewModel;
 
 abstract class AbstractBaseController extends AbstractActionController
@@ -39,7 +40,14 @@ abstract class AbstractBaseController extends AbstractActionController
         return $this->getEvent()->getApplication()->getServiceManager();
     }
 
-    protected function getViewHelper($helperName)
+    /**
+     * Get a view helper
+     *
+     * @param string $helperName
+     *      The helper name.
+     * @return \Laminas\View\Helper\HelperInterface
+     */
+    protected function getViewHelper($helperName): HelperInterface
     {
         return $this->getServiceManager()->get('ViewHelperManager')->get($helperName);
     }
