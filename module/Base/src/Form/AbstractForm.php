@@ -2,6 +2,7 @@
 
 namespace Base\Form;
 
+use Base\Plugin\EntityManager;
 use Laminas\Form\Form;
 
 /**
@@ -9,30 +10,28 @@ use Laminas\Form\Form;
  *
  * @author Thalles Ferreira
  */
-// ->setOptions(['disable_inarray_validator' => true])
-// Quando se quer passar um Select vazio para preencher com ajax por exemplo.
-
-class AbstractForm extends Form
+abstract class AbstractForm extends Form
 {
-
-    public function __construct($name = null, $options = []) {
+    public function __construct($name = null, $options = [])
+    {
         parent::__construct($name, $options);
         $this->setAttribute('autocomplete', 'off');
     }
 
     /**
-     * @return Doctrine EntityManager
+     * @return \Doctrine\ORM\EntityManagerInterface
      */
-    public function getEm()
+    public function getEm() : \Doctrine\ORM\EntityManagerInterface
     {
-        return \Base\Plugin\EntityManager::getEm();
+        return EntityManager::getEm();
     }
 
     /**
      * @param string $entityName
      * @return Repository Doctrine
      */
-    protected function getRepository($entityName) {
+    protected function getRepository($entityName)
+    {
         if (! strpos($entityName, 'Entity')) {
             return $this->getEm()->getRepository(trim('Base\Entity\\' . $entityName));
         }
@@ -47,7 +46,8 @@ class AbstractForm extends Form
      * @param array $order por onde ordenar array('nome-do-campo' => 'asc')
      * @return array options, para Checkbox, selectBox ou Radio list
      */
-    public function getOpcoes($entityName, array $campos, $criteria = [], $order = []) {
+    public function getOpcoes($entityName, array $campos, $criteria = [], $order = [])
+    {
         $entities = $this->getRepository(ucfirst($entityName))->findBy($criteria, $order);
 
         if (count($entities) > 0) {
