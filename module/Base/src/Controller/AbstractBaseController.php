@@ -78,6 +78,7 @@ abstract class AbstractBaseController extends AbstractActionController
      */
     protected function addJsFile($fileAdress): HeadScript
     {
+        /** @var \Laminas\View\Helper\HeadScript $headScript */
         $headScript = $this->getViewHelper('HeadScript');
         $headScript->appendFile($fileAdress);
 
@@ -124,8 +125,8 @@ abstract class AbstractBaseController extends AbstractActionController
     public function indexAction()
     {
         dd(
-            $this->getServiceManager()->get('ViewHelperManager'),
-            $this->setHeadTitle('isso')
+            $this->getServiceManager(),
+            $this->getServiceManager()->get('RouteListener')
         );
         $this->setHeadTitle('isso');
         return new ViewModel();
